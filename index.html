@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalvi AI - Your Student Life Companion</title>
+    <meta name="description" content="The Agentic AI that does things for students. Academics, Career, Money, and Exams in one place." />
+    
+    <!-- Prevent flash of wrong theme -->
+    <script>
+      (function() {
+        const theme = localStorage.getItem('kalvi-theme') || 
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        
+        // Restore accent color
+        const accent = localStorage.getItem('kalvi-accent') || '#2563EB';
+        document.documentElement.style.setProperty('--color-primary', accent);
+        document.documentElement.style.setProperty('--color-primary-hover', accent);
+      })();
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: ['class', '[data-theme="dark"]'],
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: {
+                DEFAULT: 'var(--color-primary)', 
+                hover: 'var(--color-primary-hover)',
+              },
+              accent: '#F97316',
+              purple: '#8B5CF6',
+              // Mapping 'gray' to Slate palette to match requested Dark/Light mode hex codes
+              gray: {
+                50: '#F8FAFC',
+                100: '#F1F5F9',
+                200: '#E2E8F0',
+                300: '#CBD5E1',
+                400: '#94A3B8',
+                500: '#64748B',
+                600: '#475569',
+                700: '#334155',
+                800: '#1E293B', // Dark Content/Cards
+                900: '#0F172A', // Dark Sidebar/Navbar
+                950: '#020617',
+              },
+              success: '#10B981',
+              error: '#EF4444',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      .fade-in-section {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        will-change: opacity, visibility;
+      }
+      .fade-in-section.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+      /* Hide scrollbar for chrome/safari/opera */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+
+      /* ==================== */
+      /* CSS CUSTOM PROPERTIES */
+      /* ==================== */
+
+      :root {
+        /* Default Blue */
+        --color-primary: #2563EB;
+        --color-primary-hover: #1D4ED8;
+
+        /* ===== LIGHT MODE (Default) ===== */
+        --bg-body: #F8FAFC;
+        --bg-navbar: #FFFFFF;
+        --bg-sidebar: #FFFFFF;
+        --bg-card: #FFFFFF;
+        --bg-input: #FFFFFF;
+        
+        --text-primary: #0F172A;
+        --text-secondary: #475569;
+        --text-muted: #94A3B8;
+        
+        --border-default: #E2E8F0;
+        
+        /* Transitions */
+        --transition-theme: 300ms ease;
+      }
+
+      /* ===== DARK MODE ===== */
+      [data-theme="dark"] {
+        --bg-body: #1E293B; /* Slate 800 */
+        --bg-navbar: #0F172A; /* Slate 900 */
+        --bg-sidebar: #0F172A; /* Slate 900 */
+        --bg-card: #1E293B; /* Slate 800 */
+        --bg-input: #1E293B;
+        
+        --text-primary: #F8FAFC;
+        --text-secondary: #CBD5E1;
+        --text-muted: #64748B;
+        
+        --border-default: #334155;
+      }
+
+      /* Density Classes */
+      body.density-compact {
+        font-size: 0.95em;
+      }
+      body.density-compact .p-4, body.density-compact .p-6, body.density-compact .p-8 {
+        padding: 0.75rem !important;
+      }
+      body.density-compact .py-3 {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+
+      /* Global Transitions */
+      body, .navbar, .sidebar, .card, .input, .btn {
+        transition: background-color var(--transition-theme), color var(--transition-theme), border-color var(--transition-theme);
+      }
+
+      /* ==================== */
+      /* THEME TOGGLE BUTTON  */
+      /* ==================== */
+
+      .theme-toggle {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.2s;
+      }
+
+      .theme-toggle:hover {
+        background-color: rgba(128, 128, 128, 0.1);
+      }
+
+      .theme-toggle .icon-sun,
+      .theme-toggle .icon-moon {
+        position: absolute;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+
+      /* Light mode: show moon, hide sun */
+      :root .theme-toggle .icon-sun {
+        opacity: 0;
+        transform: rotate(-90deg) scale(0);
+      }
+
+      :root .theme-toggle .icon-moon {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+        color: #6366F1; /* Indigo */
+      }
+
+      /* Dark mode: show sun, hide moon */
+      [data-theme="dark"] .theme-toggle .icon-sun {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+        color: #FBBF24; /* Yellow/Gold */
+      }
+
+      [data-theme="dark"] .theme-toggle .icon-moon {
+        opacity: 0;
+        transform: rotate(90deg) scale(0);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "react": "https://esm.sh/react@^19.2.1",
+    "lucide-react": "https://esm.sh/lucide-react@^0.559.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-50 antialiased transition-colors duration-300">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
